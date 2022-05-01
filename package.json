@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/JastinXyz/whatsactyl/issues"
   },
-  "homepage": "https://github.com/JastinXyz/whatsactyl#readme"
+  "homepage": "https://github.com/JastinXyz/whatsactyl#readme",
+  "dependencies": {
+    "@adiwajshing/baileys": "github:adiwajshing/baileys",
+    "@hapi/boom": "^9.1.4",
+    "axios": "^0.27.2",
+    "fs": "^0.0.1-security",
+    "pino": "^7.11.0",
+    "qrcode-terminal": "^0.12.0"
+  }
 }
