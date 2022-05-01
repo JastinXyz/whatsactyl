@@ -17,9 +17,13 @@ const baileys = require("@adiwajshing/baileys");
 const axios = require("axios");
 const { Boom } = require("@hapi/boom");
 const fs = require("fs");
-const { prefix } = require("./config.json");
+const conf = require("./config.json")
 const { state, loadState, saveState } = useSingleFileAuthState("./state.json");
 const availableCommands = new Set();
+
+/*const pteroApi = require('@linux123123/jspteroapi');
+const _app = new pteroApi.Application(conf.host, conf.api_key); // for application API
+const _client = new pteroApi.Client(conf.host, api_key); // for Client API*/
 
 const getVersionWaweb = () => {
   let version;
@@ -46,13 +50,27 @@ const startSock = () => {
   let args;
   let command;
 
-  fs.readdir("./commands", (e, files) => {
+  fs.readdir("./commands/util", (e, files) => {
+    if (e) return console.error(e);
+    files.forEach((commandFile) => {
+      availableCommands.add(commandFile.replace(".js", ""));
+    });
+  });
+    
+  fs.readdir("./commands/client", (e, files) => {
     if (e) return console.error(e);
     files.forEach((commandFile) => {
       availableCommands.add(commandFile.replace(".js", ""));
     });
   });
 
+  fs.readdir("./commands/application", (e, files) => {
+    if (e) return console.error(e);
+    files.forEach((commandFile) => {
+      availableCommands.add(commandFile.replace(".js", ""));
+    });
+  });
+    
   whats.ev.on("messages.upsert", async (m) => {
     var msg = m.messages[0];
     if (!m || !msg.message) return;
@@ -72,8 +90,8 @@ const startSock = () => {
         : "";
 
     try {
-      if (text.startsWith(prefix)) {
-        args = text.slice(prefix.length).trim().split(/ +/g);
+      if (text.startsWith(conf.prefix)) {
+        args = text.slice(conf.prefix.length).trim().split(/ +/g);
         command = args.shift().toLowerCase();
         sender = msg.pushName;
       } else {
@@ -81,7 +99,7 @@ const startSock = () => {
       }
     } catch {}
     if (availableCommands.has(command)) {
-      require(`./commands/${command}`).run(whats, msg, args);
+      require(`./commands/util/${command}` || `./commands/client/${command}` || `./commands/application/${command}`).run(whats, msg, args);
     }
   });
 

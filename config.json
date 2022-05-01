@@ -1,3 +1,7 @@
 {
-    "prefix": "!"
+    "prefix": "!",
+    "host": "host.jstnlt.my.id",
+    "application": {
+        "api_key": ""
+    }
 }
