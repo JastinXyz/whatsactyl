@@ -7,6 +7,7 @@ const {
   proto,
   jidDecode,
   useSingleFileAuthState,
+  getContentType, 
   generateForwardMessageContent,
   generateWAMessageFromContent,
   downloadContentFromMessage,
@@ -14,16 +15,14 @@ const {
   makeInMemoryStore,
 } = require("@adiwajshing/baileys");
 const baileys = require("@adiwajshing/baileys");
-const axios = require("axios");
+global.axios = require("axios");
 const { Boom } = require("@hapi/boom");
 const fs = require("fs");
-const conf = require("./config.json")
+const conf = require("./config.json");
+const { User } = require('./models/db.js');
+const { getNo } = require('./models/func.js');
 const { state, loadState, saveState } = useSingleFileAuthState("./state.json");
 const availableCommands = new Set();
-
-/*const pteroApi = require('@linux123123/jspteroapi');
-const _app = new pteroApi.Application(conf.host, conf.api_key); // for application API
-const _client = new pteroApi.Client(conf.host, api_key); // for Client API*/
 
 const getVersionWaweb = () => {
   let version;
@@ -39,7 +38,7 @@ const getVersionWaweb = () => {
 };
 
 const startSock = () => {
-  const whats = makeWASocket({
+  var whats = makeWASocket({
     logger: P({ level: "fatal" }),
     printQRInTerminal: true,
     auth: state,
@@ -50,34 +49,32 @@ const startSock = () => {
   let args;
   let command;
 
-  fs.readdir("./commands/util", (e, files) => {
-    if (e) return console.error(e);
-    files.forEach((commandFile) => {
-      availableCommands.add(commandFile.replace(".js", ""));
-    });
-  });
-    
-  fs.readdir("./commands/client", (e, files) => {
-    if (e) return console.error(e);
-    files.forEach((commandFile) => {
-      availableCommands.add(commandFile.replace(".js", ""));
-    });
-  });
+const commandFolders = fs.readdirSync('./commands');
 
-  fs.readdir("./commands/application", (e, files) => {
+for (const folder of commandFolders) {
+    const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
+    fs.readdir(`./commands/${folder}`, (e, files) => {
     if (e) return console.error(e);
     files.forEach((commandFile) => {
       availableCommands.add(commandFile.replace(".js", ""));
+        console.log(`Loaded - ${commandFile}`)
     });
+    
   });
+  
+}
     
   whats.ev.on("messages.upsert", async (m) => {
+    try {
     var msg = m.messages[0];
+    exports.msg = msg;
     if (!m || !msg.message) return;
-    if (msg.key && msg.key.remoteJid === "status@broadcast") return;
-    const from = msg.key.remoteJid;
+   if (msg.key && msg.key.remoteJid === "status@broadcast") return;
+global.from = msg.key.remoteJid;
     const content = JSON.stringify(msg.message);
-    const type = Object.keys(msg.message)[0];
+    //const type = Object.keys(msg.message)[0];
+      const type = getContentType(msg.message)
+    const prefix = conf.prefix
     const text =
       type === "conversation" && msg.message.conversation
         ? msg.message.conversation
@@ -88,19 +85,73 @@ const startSock = () => {
         : type == "extendedTextMessage" && msg.message.extendedTextMessage.text
         ? msg.message.extendedTextMessage.text
         : "";
+budy = (type === "conversation") ? msg.message.conversation : (type === "extendedTextMessage") ? msg.message.extendedTextMessage.text : ""
+budy = (type === "conversation") ? msg.message.conversation : (type === "extendedTextMessage") ? msg.message.extendedTextMessage.text : ""
+                  
+var dy = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
+		        
+const argsp = text.trim().split(/ +/g).slice(1)
+const q = argsp.join(" ")
+      
+//Auto Read
+if (conf.autoread) { 
+	whats.sendReadReceipt(from, msg.key.participant, [msg.key.id])
+}
 
+// false for not responding the command from the bot it self
+/*if(conf.self_response == false) {
+    if(getNo(msg).replace(":12", "") == whats.user.id.replace(":2", "")) {}
+}*/
+
+//Function
+global.reply = async(iy) => {
+whats.sendMessage(msg.key.remoteJid, { text: iy }, { quoted: msg })      
+  }
+
+global.replyWithImgAndCap = async(link, cap) => {
+    whats.sendMessage(msg.key.remoteJid, { image: { url: link }, caption: cap}, {quoted: msg})
+}
+
+global.error = async(info) => {
+    whats.sendMessage(msg.key.remoteJid, { text: '❌ | Something error here, ' + info }, { quoted: msg })
+}
+  
     try {
-      if (text.startsWith(conf.prefix)) {
-        args = text.slice(conf.prefix.length).trim().split(/ +/g);
-        command = args.shift().toLowerCase();
+      if (budy.startsWith("x ")) {
+         
+        var bang = await eval(`;(async () => { return ${budy.slice(2)} })();`)
+        reply(JSON.stringify(bang, null, 2))
+        }  
+   
+      if (dy.startsWith(conf.prefix)) {
+        args = dy.slice(conf.prefix.length).trim().split(/ +/g);
+      command = args.shift().toLowerCase()
+        //command = body.startsWith(prefix) ? body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase() : ''
+         
+      //  const command = chats.toLowerCase().split(' ')[0] || ''
+		
         sender = msg.pushName;
       } else {
         return;
       }
     } catch {}
+        
+    var afterArgs = args.slice(1).join(' ');
     if (availableCommands.has(command)) {
-      require(`./commands/util/${command}` || `./commands/client/${command}` || `./commands/application/${command}`).run(whats, msg, args);
+        if(fs.existsSync(`${__dirname}/commands/util/${command}.js`)) {
+            require(`${__dirname}/commands/util/${command}.js`).run(whats, msg, args, q, text, afterArgs)
+        } else if(fs.existsSync(`${__dirname}/commands/application/${command}.js`)) {
+            require(`${__dirname}/commands/application/${command}.js`).run(whats, msg, args, q, text, afterArgs)
+        } else if(fs.existsSync(`${__dirname}/commands/client/${command}.js`)) {
+            require(`${__dirname}/commands/client/${command}.js`).run(whats, msg, args, q, text, afterArgs)
+        } else if(fs.existsSync(`${__dirname}/commands/owner/${command}.js`)) {
+            require(`${__dirname}/commands/owner/${command}.js`).run(whats, msg, args, q, text, afterArgs)
+        }
+      //require(`${__dirname}/commands/util/${command}.js` || `${__dirname}/commands/application/${command}.js` || `${__dirname}/commands/client/${command}.js` || `${__dirname}/commands/owner/${command}.js`).run(whats, msg, args, q, text);
     }
+   } catch(e) {
+   console.log(e)
+  }
   });
 
   whats.ev.on("connection.update", async (update) => {
@@ -138,7 +189,8 @@ const startSock = () => {
         console.log(`Unknown DisconnectReason: ${reason}|${connection}`);
       }
     }
-    console.log("[WA SYSTEM] Connection Sucsess!");
+    console.log('Connected!', update)
+    //console.log("[WA SYSTEM] Connection Sucsess!");
   });
 
   whats.ev.on("creds.update", saveState);

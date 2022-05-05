@@ -1,7 +1,11 @@
 const { prefix } = require("../../config.json");
+const moment = require("moment-timezone");
+const tor = function (timestamp, now) {
+	return moment.duration(now - moment(timestamp * 1000)).asSeconds();
+};
 
 exports.run = (whats, msg) => {
-    whats.sendMessage(msg.key.remoteJid, { text: `REST Latency: ${Date.now() - msg.messageTimestamp}ms` });
+	reply(`REST Latency: ${tor(msg.messageTimestamp, Date.now())}ms`);
 };
 
 exports.help = {
