@@ -61,6 +61,11 @@ Refer to [config.json]('./config.json')
 - [ ] Allocation list, create, delete.
 - [ ] idk, more commands mybe?
 
+## Contributors
+<a href="https://github.com/JastinXyz/whatsactyl/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=JastinXyz/whatsactyl" />
+</a>
+
 <hr/>
 <div align="center">
 
