@@ -1,5 +1,5 @@
 {
-  "name": "wa-bot-ptero",
+  "name": "whatsactyl",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/JastinXyz/whatsactyl.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "JstnLT (https://jstnlt.my.id), ThisIsMe124 (https://github.com/ThisMe124)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/JastinXyz/whatsactyl/issues"

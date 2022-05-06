@@ -1,4 +1,4 @@
-const { prefix } = require("../../config.json");
+const { prefix, host } = require("../../config.json");
 const fs = require("fs");
 const path = require('path')
 
@@ -19,15 +19,37 @@ exports.run = async(whats, msg, args) => {
 }*/
     
     if (!args[0]) {
-           // whats.sendMessage(msg.key.remoteJid, { text: `*Available Commands:* ${Object.keys(commandFolders).join(", ")}\n\n_You can run *help <command name>* to show advanced help._` });
-        reply(`Hello ${msg.pushName} 👋\n\n*CLIENT*\nbackup, kill, manage, myinfo, reinstall, renameserver, restart, sendcommand, serverinfo, servers, start, stop, update\n\n*APPLICATION*\nallservers, allusers, getuserdetails, server\n\n*UTILITY*\nhelp, ping, setapikey\n\n*OWNER*\neval, exec\n\n_You can run *!help <command name>* to show advanced help._`)
-        /*const a = await walk('./commands')
-        console.log(a)
-        reply(JSON.stringify(a))*/
-        //reply('Shut up')
+const t = `Hello ${msg.pushName} 👋\n\n*CLIENT*\nbackup, kill, manage, myinfo, reinstall, renameserver, restart, sendcommand, serverinfo, servers, start, stop, update\n\n*APPLICATION*\nallservers, allusers, getuserdetails, server\n\n*UTILITY*\nhelp, ping, setapikey\n\n*OWNER*\neval, exec\n\n_You can run *!help <command name>* to show advanced help._`
+  const templateButtons = [
+          {
+            index: 1,
+            urlButton: {
+              displayText: "Github",
+              url: "https://github.com/JastinXyz/whatsactyl",
+            },
+          },
+          {
+            index: 2,
+            urlButton: {
+              displayText: "Hosting Url",
+              url: host,
+            },
+          },
+        ];
+const templateMessage = {
+text: t, 
+footer: "© Whatsactyl Bot",
+templateButtons: templateButtons
+}
+whats.sendMessage(from, { image: {
+url: "https://i.ibb.co/fN6nyDp/pterodactyl-logo.png",
+},
+caption: templateMessage.text,
+footer: templateMessage.footer,
+templateButtons
+}, {quoted: msg})
         } else {
             const commandName = args[0];
-           // const { name, description, category, usage } = require(`./${commandName}.js`).help;
             let h;
             if(fs.existsSync(`./commands/util/${commandName}.js`)) {
            h = require(`./${commandName}.js`).help;
