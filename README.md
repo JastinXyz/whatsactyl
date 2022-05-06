@@ -2,7 +2,7 @@
 
 _A bot to manage Pterodactyl panels via whatsapp!_
 
-Many thanks to [ThisIsMe124](https://github.com/ThisMe124) for contributing so much to building this bot from scratch.
+Many thanks to [ThisMe124](https://github.com/ThisMe124) for contributing so much to building this bot from scratch.
 
 For now, maybe there are still many shortcomings, such as the command is not fully available for category applications and others, we really welcome if there are contributors who want to build this bot together.
 
