@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { mongodb } = require('../config.json')
+const mongoose = require("mongoose");
+const { mongodb } = require("../config.json");
 
 const a = mongoose.connect(mongodb, { autoIndex: true });
 

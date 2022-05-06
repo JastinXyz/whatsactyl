@@ -4,7 +4,7 @@ const { getUserApiKey, isAdmin, getNo } = require("../../models/func.js");
 
 exports.run = async (whats, msg, args) => {
   try {
-      const akey = await getUserApiKey(getNo(msg).replace(":14", ""))
+    const akey = await getUserApiKey(getNo(msg).replace(":14", ""));
     if ((await isAdmin(akey)) == false) {
       reply(`❌ | This command is panel admin-only!`);
     } else {
@@ -17,8 +17,7 @@ exports.run = async (whats, msg, args) => {
             index: 1,
             urlButton: {
               displayText: "[ admin ] view",
-              url:
-                host + "/admin/users/view/" + y.attributes.id,
+              url: host + "/admin/users/view/" + y.attributes.id,
             },
           },
           {
@@ -26,8 +25,7 @@ exports.run = async (whats, msg, args) => {
             urlButton: {
               displayText: "[ admin ] server owned",
               url:
-                host + "/admin/servers?filter%5Bowner_id%5D=" +
-                y.attributes.id,
+                host + "/admin/servers?filter%5Bowner_id%5D=" + y.attributes.id,
             },
           },
         ];
@@ -38,16 +36,20 @@ exports.run = async (whats, msg, args) => {
           templateButtons: templateButtons,
         };
 
-        whats.sendMessage(from, {
-          image: {
-            url: `https://www.gravatar.com/avatar/${require("md5")(
-              y.attributes.email
-            )}?s=2048&d=mm&r=pg`,
+        whats.sendMessage(
+          from,
+          {
+            image: {
+              url: `https://www.gravatar.com/avatar/${require("md5")(
+                y.attributes.email
+              )}?s=2048&d=mm&r=pg`,
+            },
+            caption: templateMessage.text,
+            footer: templateMessage.footer,
+            templateButtons,
           },
-          caption: templateMessage.text,
-          footer: templateMessage.footer,
-          templateButtons,
-        }, {quoted: msg});
+          { quoted: msg }
+        );
       }
     }
   } catch (e) {
@@ -60,5 +62,4 @@ exports.help = {
   description: "Gets details of a user",
   category: "Application",
   usage: `${prefix}getuserdetails [user id]`,
-  cooldown: 5,
 };

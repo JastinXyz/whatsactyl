@@ -1,7 +1,10 @@
 {
-    "prefix": "!",
-    "host": "host.jstnlt.my.id",
-    "application": {
-        "api_key": ""
-    }
+  "prefix": "!",
+  "autoread": true,
+  "mongodb": "",
+  "ownerNumber": [""],
+  "host": "https://domain.tld",
+  "application": {
+    "api_key": ""
+  }
 }
