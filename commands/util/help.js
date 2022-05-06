@@ -4,31 +4,27 @@ const path = require('path')
 
 exports.run = async(whats, msg, args) => {
     var tmpFile = {};
-    const commandFolders = fs.readdirSync('./commands');
-    //kontol
-    function walk(dir, callback) {
-    fs.readdir(dir, function(err, files) {
-        if (err) throw err;
-        files.forEach(function(file) {
-            var filepath = path.join(dir, file);
-            fs.stat(filepath, function(err,stats) {
-                if (stats.isDirectory()) {
-                    walk(filepath, callback);
-                } else if (stats.isFile() && file.endsWith('.js')) {
-                    tmpFile[file.replace(".js", "")] = {}
-                    return tmpFile
-                }
-            });
-        });
+   const commandFolders = fs.readdirSync('./commands');
+
+/*for (const folder of commandFolders) {
+    const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
+    fs.readdir(`./commands/${folder}`, (e, files) => {
+    if (e) return console.error(e);
+    files.forEach((commandFile) => {
+      tmpFile[commandFile.replace(".js", "")] = {}
     });
-}
-        
+   
+  });
+  
+}*/
+    
     if (!args[0]) {
-            //whats.sendMessage(msg.key.remoteJid, { text: `*Available commands:* ${Object.keys(tmpFile).join(", ")}\n\n_You can run *help <command name>* to show advanced help._` });
+           // whats.sendMessage(msg.key.remoteJid, { text: `*Available Commands:* ${Object.keys(commandFolders).join(", ")}\n\n_You can run *help <command name>* to show advanced help._` });
+        reply(`Hello ${msg.pushName} 👋\n\n*CLIENT*\nbackup, kill, manage, myinfo, reinstall, renameserver, restart, sendcommand, serverinfo, servers, start, stop, update\n\n*APPLICATION*\nallservers, allusers, getuserdetails, server\n\n*UTILITY*\nhelp, ping, setapikey\n\n*OWNER*\neval, exec\n\n_You can run *!help <command name>* to show advanced help._`)
         /*const a = await walk('./commands')
         console.log(a)
         reply(JSON.stringify(a))*/
-        reply('Shut up')
+        //reply('Shut up')
         } else {
             const commandName = args[0];
            // const { name, description, category, usage } = require(`./${commandName}.js`).help;
@@ -49,35 +45,6 @@ exports.run = async(whats, msg, args) => {
                	reply(`*${h.name}*\n\nDescription: ${h.description}\nCategory: ${h.category}\nUsage: \`\`\`${h.usage}\`\`\``)
             }
         }
-    
-    
-    
-    /*fs.readdir("./commands/util", (e, files) => {
-        if (e) return console.error(e);
-        files.forEach(jsFile => {
-            const cmdFile = require(`./${jsFile}`);
-            tmpFile[jsFile.replace(".js", "")] = {};
-            tmpFile[jsFile.replace(".js", "")].name = cmdFile.help.name;
-            tmpFile[jsFile.replace(".js", "")].description = cmdFile.help.description;
-            tmpFile[jsFile.replace(".js", "")].usage = cmdFile.help.usage;
-        });
-        
-   // logic here
-      })*/
-
-/*for (const folder of commandFolders) {
-    const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
-    fs.readdir(`./commands/${folder}`, (e, files) => {
-    if (e) return console.error(e);
-    files.forEach((commandFile) => {
-     	//const cmdFile = require(`../../commands/util/${commandFile}`);
-            tmpFile[commandFile.replace(".js", "")] = {};
-            //tmpFile[commandFile.replace(".js", "")].name = cmdFile.help.name;
-            //tmpFile[commandFile.replace(".js", "")].description = cmdFile.help.description;
-            //tmpFile[commandFile.replace(".js", "")].usage = cmdFile.help.usage;
-    });
-  });
-}*/
 };
 
 exports.help = {

@@ -4,7 +4,8 @@ let exec = promisify(cp.exec).bind(cp);
 const { prefix } = require("../../config.json");
 
 exports.run = async (whats, msg, args, q) => {
-  if(!q) return reply("Mana Code Yang Mau Di Execute?")
+    if(!isOwner) return reply("❌ | Only owner can use eval command!")
+  if(!q) return reply("wheres the code?")
   let o;
   try {
     o = await exec(q);

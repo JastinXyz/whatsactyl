@@ -3,9 +3,9 @@ const { application } = require("../../models/nodeactyl.js");
 const { getUserApiKey, isAdmin, getNo } = require("../../models/func.js");
 
 exports.run = async (whats, msg, args) => {
-    const akey = await getUserApiKey(getNo(msg).replace(":12", ""))
+    const akey = await getUserApiKey(getNo(msg).replace(":14", ""))
     if ((await isAdmin(akey)) == false) {
-      reply(`❌ | This command is admin-only!`);
+      reply(`❌ | This command is panel admin-only!`);
     } else {
       application.getAllUsers(args[0] || 1).then((x) => {
 let num = 0

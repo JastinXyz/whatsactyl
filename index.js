@@ -32,7 +32,7 @@ const getVersionWaweb = () => {
     );
     version = [data.currentVersion.replace(/[.]/g, ", ")];
   } catch {
-    version = [2, 2204, 13];
+    version = [2, 2214, 12];
   }
   return version;
 };
@@ -43,7 +43,7 @@ const startSock = () => {
     printQRInTerminal: true,
     auth: state,
     browser: ["Whatsactyl Bot", "Safari", "1.0.0"],
-    version: getVersionWaweb() || [2, 2204, 13],
+    version: getVersionWaweb() || [2, 2214, 12],
   });
 
   let args;
@@ -72,9 +72,9 @@ for (const folder of commandFolders) {
    if (msg.key && msg.key.remoteJid === "status@broadcast") return;
 global.from = msg.key.remoteJid;
     const content = JSON.stringify(msg.message);
-    //const type = Object.keys(msg.message)[0];
       const type = getContentType(msg.message)
     const prefix = conf.prefix
+    const ownerNumber = conf.ownerNumber
     const text =
       type === "conversation" && msg.message.conversation
         ? msg.message.conversation
@@ -85,14 +85,13 @@ global.from = msg.key.remoteJid;
         : type == "extendedTextMessage" && msg.message.extendedTextMessage.text
         ? msg.message.extendedTextMessage.text
         : "";
-budy = (type === "conversation") ? msg.message.conversation : (type === "extendedTextMessage") ? msg.message.extendedTextMessage.text : ""
-budy = (type === "conversation") ? msg.message.conversation : (type === "extendedTextMessage") ? msg.message.extendedTextMessage.text : ""
-                  
-var dy = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''
-		        
+const isGroup = from.endsWith('@g.us')
+const senderp = isGroup ? msg.key.participant : msg.key.remoteJid              
+var dy = (type === 'conversation' && msg.message.conversation) ? msg.message.conversation : (type == 'imageMessage') && msg.message.imageMessage.caption ? msg.message.imageMessage.caption : (type == 'documentMessage') && msg.message.documentMessage.caption ? msg.message.documentMessage.caption : (type == 'videoMessage') && msg.message.videoMessage.caption ? msg.message.videoMessage.caption : (type == 'extendedTextMessage') && msg.message.extendedTextMessage.text ? msg.message.extendedTextMessage.text : (type == 'buttonsResponseMessage' && msg.message.buttonsResponseMessage.selectedButtonId) ? msg.message.buttonsResponseMessage.selectedButtonId : (type == 'templateButtonReplyMessage') && msg.message.templateButtonReplyMessage.selectedId ? msg.message.templateButtonReplyMessage.selectedId : ''		        
 const argsp = text.trim().split(/ +/g).slice(1)
 const q = argsp.join(" ")
-      
+global.isOwner = [whats.user.id, ...ownerNumber].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(senderp.replace(":14", ""))
+
 //Auto Read
 if (conf.autoread) { 
 	whats.sendReadReceipt(from, msg.key.participant, [msg.key.id])
@@ -117,19 +116,9 @@ global.error = async(info) => {
 }
   
     try {
-      if (budy.startsWith("x ")) {
-         
-        var bang = await eval(`;(async () => { return ${budy.slice(2)} })();`)
-        reply(JSON.stringify(bang, null, 2))
-        }  
-   
       if (dy.startsWith(conf.prefix)) {
         args = dy.slice(conf.prefix.length).trim().split(/ +/g);
-      command = args.shift().toLowerCase()
-        //command = body.startsWith(prefix) ? body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase() : ''
-         
-      //  const command = chats.toLowerCase().split(' ')[0] || ''
-		
+      command = args.shift().toLowerCase()		
         sender = msg.pushName;
       } else {
         return;

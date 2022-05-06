@@ -10,9 +10,14 @@ exports.run = async(whats, msg, args) => {
         try {
      	const _c = new Nodeactyl.NodeactylClient(host, await getUserApiKey(getNo(msg).replace(":12", "")));
         const state = await _c.getServerUsages(args[0])
+        const res = await _c.getServerDetails(args[0])
+        let ips = [];
+               res.relationships.allocations.data.forEach(element => {
+        	const ip = element.attributes.ip + ':' + element.attributes.port;
+            ips.push(ip);
+        });
         let buttons;
-        let status;
-        
+        let status;      
         if(state.current_state == "offline") {
             buttons = [
   {buttonId: `${prefix}start ${args[0]}`, buttonText: {displayText: 'Start'}, type: 1},
@@ -43,9 +48,11 @@ exports.run = async(whats, msg, args) => {
             status = res2.current_state
         }
 
+const t = `*〔 SERVER CONTROL 〕*\n➥ Running on \`\`\`${ips.join('` | `')}\`\`\`\n\n*• ID:* ${res.identifier}\n*• Server Name:* ${res.name}\n*• Current State:* ${status}\n*• Database:* ${res.feature_limits.databases}\n*• Allocations:* ${res.feature_limits.allocations}\n*• Ram:* ${(state.resources.memory_bytes / 1024 / 1024).toFixed(2)} / ${res.limits.memory} MB\n*• Disk Usage:* ${(state.resources.disk_bytes / 1024 / 1024).toFixed(2)} / ${res.limits.disk} MB\n\n*➥ ${host + '/server/' + args[0]}*`           
+            
 const buttonMessage = {
-    text: `*〔 SERVER CONTROL 〕*\n• Current State: ${status}\n`,
-    footer: '© Beta',
+    text: t, 
+    footer: '© Whatsactyl Bot',
     buttons: buttons,
     headerType: 1
 }

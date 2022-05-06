@@ -4,9 +4,9 @@ const { getUserApiKey, isAdmin, getNo } = require("../../models/func.js");
 
 exports.run = async (whats, msg, args) => {
   try {
-    const akey = await getUserApiKey(getNo(msg).replace(":12", ""))
+    const akey = await getUserApiKey(getNo(msg).replace(":14", ""))
     if ((await isAdmin(akey)) == false) {
-      reply(`❌ | This command is admin-only!`);
+      reply(`❌ | This command is panel admin-only!`);
     } else {
       if (!args[0]) {
         reply(`\`\`\`${prefix}server [suspend | unsuspend]\`\`\``);
