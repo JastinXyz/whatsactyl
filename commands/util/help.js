@@ -7,7 +7,7 @@ exports.run = async (whats, msg, args) => {
   const commandFolders = fs.readdirSync("./commands");
 
   if (!args[0]) {
-    const t = `Hello ${msg.pushName} 👋\n\n*CLIENT*\nbackup, kill, manage, myinfo, reinstall, renameserver, restart, sendcommand, serverinfo, servers, start, stop, update\n\n*APPLICATION*\nallservers, allusers, getuserdetails, server\n\n*UTILITY*\nhelp, ping, setapikey\n\n*OWNER*\neval, exec\n\n_You can run *!help <command name>* to show advanced help._`;
+    const t = `Hello ${msg.pushName} 👋\n\n*CLIENT*\nbackup, kill, manage, myinfo, reinstall, renameserver, restart, sendcommand, serverinfo, servers, start, stop, update\n\n*APPLICATION*\nallservers, allusers, getuserdetails, server, user\n\n*UTILITY*\nhelp, ping, setapikey\n\n*OWNER*\neval, exec\n\n_You can run *!help <command name>* to show advanced help._`;
     const templateButtons = [
       {
         index: 1,
