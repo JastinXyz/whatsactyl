@@ -8,3 +8,4 @@ const application = new Nodeactyl.NodeactylApplication(
 );
 
 exports.application = application;
+exports.Nodeactyl = Nodeactyl;

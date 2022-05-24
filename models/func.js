@@ -1,8 +1,33 @@
 const conf = require("../config.json");
 const { User } = require("./db.js");
 const { msg } = require("../index.js");
+const { jidDecode } = require("@adiwajshing/baileys");
 
 module.exports = {
+  eggDetails: async function eggDetails(nest, egg) {
+    const y = await axios({
+      url: `${conf.host}/api/application/nests/${nest}/eggs/${egg}`,
+      method: "GET",
+      followRedirect: true,
+      maxRedirects: 5,
+      headers: {
+        Authorization: "Bearer " + conf.application.api_key,
+        "Content-Type": "application/json",
+        Accept: "Application/vnd.pterodactyl.v1+json",
+      },
+    });
+    return y.data;
+  },
+  decodeJid: function decodeJid(jid) {
+    if (!jid) return jid;
+    if (/:\d+@/gi.test(jid)) {
+      let decode = jidDecode(jid) || {};
+      return (
+        (decode.user && decode.server && decode.user + "@" + decode.server) ||
+        jid
+      );
+    } else return jid;
+  },
   isAdmin: async function isAdmin(key) {
     const a = await module.exports.client.userAccount(key);
     if (a.success == false) {

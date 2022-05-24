@@ -25,6 +25,10 @@ node .
 - Scan the QR
 - Enjoy!
 
+## Showcase
+
+![img](./screenshot/showcase.jpeg)
+
 ## Configuration
 Refer to [config.json]('./config.json')
 ```json
@@ -36,30 +40,50 @@ Refer to [config.json]('./config.json')
   "host": "https://domain.tld",
   "application": {
     "api_key": ""
+  },
+  "serverCreate": {
+    "nestId": "",
+    "ram": "",
+    "disk": "",
+    "cpu": "",
+    "limits": {
+      "db": "",
+      "backups": "",
+      "allocations": ""
+    },
+    "egg": [
+      {
+        "eggId": "",
+        "environment": {
+          "NAME": "VALUE",
+        }
+      },
+      {
+        "eggId": "",
+        "environment": {
+          "NAME": "VALUE",
+        }
+      }
+    ]
   }
 }
+
 ```
 
 | Object | Type | Description |
 |--------|------|-------------|
-| prefix | `string` | your bot prefix |
-| autoread | `string` | whether the bot will automatically mark the message as read. |
-| mongodb | `string` | MongoDB database url |
-| ownerNumber | `array` | List of numbers that can run commands in the category owner. |
-| host | `string` | url to your host **(must use http:// or https:// as a prefix and at the end there is no slash but the last letter of your TLD)** |
-| application.api_key | `string` | Your panel's API Key. This can be overridden using the `setapikey` command later. |
-
-## Showcase
-
-![img](./screenshot/showcase.jpeg)
-
-## To Do
-- [ ] Server create & delete.
-- [ ] User create & delete.
-- [ ] Location create, delete, details, list.
-- [ ] Node create, delete, details, list.
-- [ ] Allocation list, create, delete.
-- [ ] idk, more commands mybe?
+| prefix | `String` | your bot prefix |
+| autoread | `String` | whether the bot will automatically mark the message as read. |
+| mongodb | `String` | MongoDB database url |
+| ownerNumber | `Array` | List of numbers that can run commands in the category owner. |
+| host | `String` | url to your host **(must use http:// or https:// as a prefix and at the end there is no slash but the last letter of your TLD)** |
+| application.api_key | `String` | Your panel's API Key. This can be overridden using the `setapikey` command later. |
+| serverCreate.nestId | `Number` | ID nest in which there is an egg which will later be placed on `serverCreate.egg` |
+| serverCreate.ram | `Number` | The amount of ram for each server that will be created with the command. (MB) |
+| serverCreate.disk | `Number` | The amount of disk for each server that will be created with the command. (MB) |
+| serverCreate.cpu | `Number` | The amount of cpu for each server that will be created with the command. (like `100`, `50`, etc)
+| serverCreate.limits.[db, backups, allocations] | `Number` | How many limits are there for the backup, database, and allocations features. |
+| serverCreate.egg | `Array` | Fill in the array with the objects that have been sampled in there. This is very much needed for the create server command. EggId is the id of the egg, and environment is the startup variables that are needed by the egg itself. |
 
 ## Contributors
 <a href="https://github.com/JastinXyz/whatsactyl/graphs/contributors">

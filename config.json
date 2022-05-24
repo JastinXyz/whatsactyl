@@ -6,5 +6,30 @@
   "host": "https://domain.tld",
   "application": {
     "api_key": ""
+  },
+  "serverCreate": {
+    "nestId": "",
+    "ram": "",
+    "disk": "",
+    "cpu": "",
+    "limits": {
+      "db": "",
+      "backups": "",
+      "allocations": ""
+    },
+    "egg": [
+      {
+        "eggId": "",
+        "environment": {
+          "NAME": "VALUE",
+        }
+      },
+      {
+        "eggId": "",
+        "environment": {
+          "NAME": "VALUE",
+        }
+      }
+    ]
   }
 }

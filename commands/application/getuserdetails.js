@@ -1,10 +1,10 @@
 const { prefix, host } = require("../../config.json");
 const { application } = require("../../models/nodeactyl.js");
-const { getUserApiKey, isAdmin, getNo } = require("../../models/func.js");
+const { getUserApiKey, isAdmin, getNo, decodeJid } = require("../../models/func.js");
 
 exports.run = async (whats, msg, args) => {
   try {
-    const akey = await getUserApiKey(getNo(msg).replace(":14", ""));
+    const akey = await getUserApiKey(decodeJid(getNo(msg)));
     if ((await isAdmin(akey)) == false) {
       reply(`❌ | This command is panel admin-only!`);
     } else {
