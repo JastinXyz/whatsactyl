@@ -48,15 +48,15 @@ exports.run = async (whats, msg, args) => {
         } else if (args[0] == "create") {
           if (!args[1]) {
             reply(
-              `\`\`\`${prefix}server create [owner id] [name] [egg id]\`\`\``
+              `\`\`\`${prefix}server create [owner id] [name] [egg id] [ram (mb) (optional)] [disk (mb) (optional)] [cpu (mb) (optional)]\`\`\``
             );
           } else if (!args[2]) {
             reply(
-              `\`\`\`${prefix}server create ${args[1]} [name] [egg id]\`\`\``
+              `\`\`\`${prefix}server create ${args[1]} [name] [egg id] [ram (mb) (optional)] [disk (mb) (optional)] [cpu (mb) (optional)]\`\`\``
             );
           } else if (!args[3]) {
             reply(
-              `\`\`\`${prefix}server create ${args[1]} ${args[2]} [egg id]\`\`\``
+              `\`\`\`${prefix}server create ${args[1]} ${args[2]} [egg id] [ram (mb) (optional)] [disk (mb) (optional)] [cpu (mb) (optional)]\`\`\``
             );
           } else {
             const egg = await eggDetails(cfg.serverCreate.nestId, args[3]);
@@ -73,11 +73,11 @@ exports.run = async (whats, msg, args) => {
               startup: egg.attributes.startup,
               environment: cfg.serverCreate.egg[findIndex].environment,
               limits: {
-                memory: Number(cfg.serverCreate.ram),
+                memory: Number(args[4]? args[4] : cfg.serverCreate.ram),
                 swap: 0,
-                disk: Number(cfg.serverCreate.disk),
+                disk: Number(args[5]? args[5] : cfg.serverCreate.disk),
                 io: 500,
-                cpu: Number(cfg.serverCreate.cpu),
+                cpu: Number(args[6]? args[6] : cfg.serverCreate.cpu),
               },
               feature_limits: {
                 databases: Number(cfg.serverCreate.limits.db),
@@ -139,3 +139,4 @@ exports.help = {
   category: "Application",
   usage: `${prefix}server [suspend | unsuspend | create | delete]`,
 };
+
